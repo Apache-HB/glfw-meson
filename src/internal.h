@@ -180,6 +180,10 @@ typedef void (APIENTRY * PFN_vkVoidFunction)(void);
   #define vkGetInstanceProcAddr _glfw.vk.GetInstanceProcAddr
 #endif
 
+#if defined(__APPLE__) && !defined(_GLFW_COCOA)
+#   define _GLFW_COCOA
+#endif
+
 #if defined(_GLFW_COCOA)
  #include "cocoa_platform.h"
 #elif defined(_GLFW_WIN32)
