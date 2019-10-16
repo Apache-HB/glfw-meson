@@ -64,12 +64,15 @@ endif
 # Add joystick sources
 #--------------------------------------------------------------------
 
+args = []
+
 if host_system == 'windows'
     sources += ['win32_joystick.h',
                 'win32_joystick.c']
 elif host_system == 'darwin'
+    add_languages('objc')
     sources += ['cocoa_joystick.h',
-                'cocoa_joystick.c']
+                'cocoa_joystick.m']
 elif host_system == 'linux'
     sources += ['linux_joystick.h',
                 'linux_joystick.c']
@@ -224,6 +227,10 @@ endif
 #--------------------------------------------------------------------
 # Declare library and its dependency object
 #--------------------------------------------------------------------
+
+if host_system == 'darwin'
+    dependencies += dependency('appleframeworks', modules : [ 'Cocoa', 'IOKit', 'CoreVideo' ])
+endif
 
 glfw_library = library('glfw',
                        sources,

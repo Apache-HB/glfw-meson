@@ -290,7 +290,7 @@ static GLFWbool initializeTIS(void)
 
 int _glfwPlatformInit(void)
 {
-    _glfw.ns.autoreleasePool = [[NSAutoreleasePool alloc] init];
+    //_glfw.ns.autoreleasePool = [[NSAutoreleasePool alloc] init];
 
     if (_glfw.hints.init.ns.chdir)
         changeToResourcesDirectory();
@@ -359,8 +359,8 @@ void _glfwPlatformTerminate(void)
     _glfwTerminateNSGL();
     _glfwTerminateJoysticksNS();
 
-    [_glfw.ns.autoreleasePool release];
-    _glfw.ns.autoreleasePool = nil;
+    //[_glfw.ns.autoreleasePool release];
+    //_glfw.ns.autoreleasePool = nil;
 }
 
 const char* _glfwPlatformGetVersionString(void)

@@ -414,7 +414,7 @@ static const NSRange kEmptyRange = { NSNotFound, 0 };
 
         [self updateTrackingAreas];
         [self registerForDraggedTypes:[NSArray arrayWithObjects:
-                                       NSFilenamesPboardType, nil]];
+                                       NSPasteboardTypeFileURL, nil]];
     }
 
     return self;
@@ -682,7 +682,7 @@ static const NSRange kEmptyRange = { NSNotFound, 0 };
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
     NSPasteboard* pasteboard = [sender draggingPasteboard];
-    NSArray* files = [pasteboard propertyListForType:NSFilenamesPboardType];
+    NSArray* files = [pasteboard propertyListForType:NSPasteboardTypeFileURL];
 
     const NSRect contentRect = [window->ns.view frame];
     _glfwInputCursorPos(window,
@@ -1201,8 +1201,8 @@ void _glfwPlatformDestroyWindow(_GLFWwindow* window)
     [window->ns.object close];
     window->ns.object = nil;
 
-    [_glfw.ns.autoreleasePool drain];
-    _glfw.ns.autoreleasePool = [[NSAutoreleasePool alloc] init];
+    //[_glfw.ns.autoreleasePool drain];
+    //_glfw.ns.autoreleasePool = [[NSAutoreleasePool alloc] init];
 }
 
 void _glfwPlatformSetWindowTitle(_GLFWwindow* window, const char *title)
@@ -1526,8 +1526,8 @@ void _glfwPlatformPollEvents(void)
         [NSApp sendEvent:event];
     }
 
-    [_glfw.ns.autoreleasePool drain];
-    _glfw.ns.autoreleasePool = [[NSAutoreleasePool alloc] init];
+    //[_glfw.ns.autoreleasePool drain];
+    //_glfw.ns.autoreleasePool = [[NSAutoreleasePool alloc] init];
 }
 
 void _glfwPlatformWaitEvents(void)
@@ -1559,7 +1559,7 @@ void _glfwPlatformWaitEventsTimeout(double timeout)
 
 void _glfwPlatformPostEmptyEvent(void)
 {
-    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+    //NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     NSEvent* event = [NSEvent otherEventWithType:NSEventTypeApplicationDefined
                                         location:NSMakePoint(0, 0)
                                    modifierFlags:0
@@ -1570,7 +1570,7 @@ void _glfwPlatformPostEmptyEvent(void)
                                            data1:0
                                            data2:0];
     [NSApp postEvent:event atStart:YES];
-    [pool drain];
+    //[pool drain];
 }
 
 void _glfwPlatformGetCursorPos(_GLFWwindow* window, double* xpos, double* ypos)
@@ -1694,7 +1694,7 @@ int _glfwPlatformCreateCursor(_GLFWcursor* cursor,
                         hasAlpha:YES
                         isPlanar:NO
                   colorSpaceName:NSCalibratedRGBColorSpace
-                    bitmapFormat:NSAlphaNonpremultipliedBitmapFormat
+                    bitmapFormat:NSBitmapFormatAlphaNonpremultiplied
                      bytesPerRow:image->width * 4
                     bitsPerPixel:32];
 
@@ -1761,26 +1761,26 @@ void _glfwPlatformSetCursor(_GLFWwindow* window, _GLFWcursor* cursor)
 
 void _glfwPlatformSetClipboardString(const char* string)
 {
-    NSArray* types = [NSArray arrayWithObjects:NSStringPboardType, nil];
+    NSArray* types = [NSArray arrayWithObjects:NSPasteboardTypeString, nil];
 
     NSPasteboard* pasteboard = [NSPasteboard generalPasteboard];
     [pasteboard declareTypes:types owner:nil];
     [pasteboard setString:[NSString stringWithUTF8String:string]
-                  forType:NSStringPboardType];
+                  forType:NSPasteboardTypeString];
 }
 
 const char* _glfwPlatformGetClipboardString(void)
 {
     NSPasteboard* pasteboard = [NSPasteboard generalPasteboard];
 
-    if (![[pasteboard types] containsObject:NSStringPboardType])
+    if (![[pasteboard types] containsObject:NSPasteboardTypeString])
     {
         _glfwInputError(GLFW_FORMAT_UNAVAILABLE,
                         "Cocoa: Failed to retrieve string from pasteboard");
         return NULL;
     }
 
-    NSString* object = [pasteboard stringForType:NSStringPboardType];
+    NSString* object = [pasteboard stringForType:NSPasteboardTypeString];
     if (!object)
     {
         _glfwInputError(GLFW_PLATFORM_ERROR,
