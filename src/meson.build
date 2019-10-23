@@ -232,7 +232,7 @@ if host_system == 'darwin'
     dependencies += dependency('appleframeworks', modules : [ 'Cocoa', 'IOKit', 'CoreVideo' ])
 endif
 
-glfw_library = library('glfw',
+glfw_library = static_library('glfw',
                        sources,
                        version: meson.project_version(),
                        c_args: ['-D_GLFW_USE_CONFIG_H'],
